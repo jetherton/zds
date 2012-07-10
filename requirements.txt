@@ -1,0 +1,37 @@
+
+    * Text box for authenticated users to enter information about the status of a report.
+    * They can enter more than on status update per report
+    * Date and time should be recorded and displayed
+    * Tags can be added to status updates. Only one tag per status update?
+    * When the user enters the update they can decide if it should be public or private.
+    * This information should appear at the bottom of a report, in a similar fashion to comments.
+    * authenticated users can edit and delete status updates.
+    
+    
+    * Have an interface where admins could add/edit/delete the tags. That way tags are hard coded.
+        * If you want to get really fancy we could make the tags translatable. So you'd enter a tag for English and a tag for Spanish
+    * Allow tags and status updates to be searched via the http://ivan-coachella.org/reports/reports page. 
+    * Since only authorized users can update the status I'd recommend automatically using their information as the info of the author. That way everyone will know who updated the status, and no one could update under someone else's name.
+    * If you wanted to get really fancy you could setup the tags to occur in a specific order and enforce a work flow. So for example you could only assign a tag of "finished" if before that the report had the tag of "assigned to" you know.
+
+    
+    
+        
+zds_rs_status
+id, user_id, incident_id, time, comment, is_public
+    
+zds_rs_tag
+id, tag
+
+zds_rs_tag_status
+tag_id, status_id    
+    
+zds_rs_tag_lang
+tag_id, locale, translation
+    
+zds_rs_workflow
+current_tag_id, next_tag_id
+    
+
+    
+    
