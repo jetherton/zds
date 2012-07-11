@@ -51,9 +51,10 @@ class Zdsreportstatus_Install {
 		$this->db->query("
 				CREATE TABLE IF NOT EXISTS `".Kohana::config('database.default.table_prefix')."zds_rs_tag_status`
 				(
+				id int(15) unsigned NOT NULL AUTO_INCREMENT,
 				tag_id int(15) unsigned NOT NULL,
 				status_id int(15) unsigned NOT NULL,
-				PRIMARY KEY (`tag_id`, `status_id`)
+				PRIMARY KEY (`id`)
 			);
 		");
 		
@@ -61,10 +62,11 @@ class Zdsreportstatus_Install {
 		$this->db->query("
 				CREATE TABLE IF NOT EXISTS `".Kohana::config('database.default.table_prefix')."zds_rs_tag_lang`
 				(
+				id int(15) unsigned NOT NULL AUTO_INCREMENT,
 				tag_id int(15) unsigned NOT NULL,
 				locale char(10) NOT NULL,
 				translation char(255) NOT NULL,
-				PRIMARY KEY (`tag_id`, `locale`)
+				PRIMARY KEY (`id`)
 			);
 		");
 
@@ -72,9 +74,10 @@ class Zdsreportstatus_Install {
 		$this->db->query("
 				CREATE TABLE IF NOT EXISTS `".Kohana::config('database.default.table_prefix')."zds_rs_workflow`
 				(
+				id int(15) unsigned NOT NULL AUTO_INCREMENT,
 				current_tag_id int(15) unsigned NOT NULL,
 				next_tag_id int(15) unsigned NOT NULL,				
-				PRIMARY KEY (`current_tag_id`, `next_tag_id`)
+				PRIMARY KEY (`id`)
 			);
 		");
 

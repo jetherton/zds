@@ -24,13 +24,13 @@ zds_rs_tag
 id, tag
 
 zds_rs_tag_status
-tag_id, status_id    
+id, tag_id, status_id    
     
 zds_rs_tag_lang
-tag_id, locale, translation
+id, tag_id, locale, translation
     
 zds_rs_workflow
-current_tag_id, next_tag_id
+id, current_tag_id, next_tag_id
     
 
     

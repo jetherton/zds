@@ -23,10 +23,10 @@ class Zds_rs_tag_lang_Model extends ORM
 			$tag_langs = ORM::factory('zds_rs_tag_lang')->find_all();
 		}
 	
-		$tag_langs = array();
+		$t_langs = array();
 		foreach($tag_langs as $tag_lang) {
-			$t_langs[$tag_lang->tag_id][$tag_lang->locale]['id'] = $tag_lang->tag_id;
-			$t_langs[$tg_lang->tag_id][$tag_lang->locale]['tag_title'] = $tag_lang->translation;
+			$t_langs[$tag_lang->tag_id][$tag_lang->locale]['id'] = $tag_lang->id;
+			$t_langs[$tg_lang->tag_id][$tag_lang->locale] = $tag_lang->translation;
 		}
 	
 		return $t_langs;

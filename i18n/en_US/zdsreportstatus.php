@@ -14,6 +14,7 @@
 		'add_edit'=>'Add/Edit',
 		'tag_name'=>'Tag Name',			
 		'tag_translation'=>'Tag Translation',
+		'save'=>'Save',
 			
 	);
 	

@@ -57,43 +57,44 @@ class zdsreportstatus_Settings_Controller extends Admin_Controller
 			$post_data = $_POST;
 				
 			// Extract category-specific  information
-			$tag_data = arr::extract($post_data, 'tag_id', 'tag_title');
+			$tag_data = arr::extract($post_data, 'tag');
 				
 			// Extract category image and category languages for independent validation
-			$secondary_data = arr::extract($post_data, 'title_title_lang', 'action');
+			$secondary_data = arr::extract($post_data, 'tag_title_lang', 'action');
 				
 			// Setup validation for the secondary data
 			$post = Validation::factory($secondary_data)
-			->pre_filter('trim', TRUE);
+				->pre_filter('trim', TRUE);
+
 		
 			// Add validation for the add/edit action
 			if ($post->action == 'a')
 			{
-						
 				// Add the different language form keys for fields
 				foreach ($locales as $lang_key => $lang_name)
 				{
-					$post->add_rules('tag_title_lang['.$lang_key.']','length[3,80]');
+					$post->add_rules('tag_title_lang['.$lang_key.']','length[1,80]');
 				}
 			}
 				
 			// Category instance for the operation
-			$tag = (! empty($_POST['tag_id']) AND Zds_rs_tag_Model::is_valid_category($_POST['tag_id']))
+			$tag = (! empty($_POST['tag_id']) AND Zds_rs_tag_Model::is_valid_tag($_POST['tag_id']))
 				? new Zds_rs_tag_Model($_POST['tag_id'])
 				: new Zds_rs_tag_Model();
-				
+
 				
 			// Check the specified action
 			if ($post->action == 'a')
 			{
 				// Test to see if things passed the rule checks
-				if ($tag->validate($tag_data) AND $post->validate(FALSE))
+				if ($tag->validate($tag_data) AND  $post->validate(FALSE))
 				{
+					
 					// Save the category
 					$tag->save();
 						
 					// Get the category localization
-					$languages = ($tag->loaded) ? Zds_rs_status_Model::tag_langs($tag->id) : FALSE;
+					$languages = ($tag->loaded) ? Zds_rs_tag_lang_Model::tag_langs($tag->id) : FALSE;
 						
 					$tag_lang = (isset($languages[$tag->id])) ? $languages[$tag->id] : FALSE;
 						
@@ -101,8 +102,8 @@ class zdsreportstatus_Settings_Controller extends Admin_Controller
 					foreach ($post->tag_title_lang as $lang_key => $localized_tag_name)
 					{
 						$tl = (isset($tag_lang[$lang_key]['id']))
-						? ORM::factory('zds_rs_tag_lang',$tag_lang[$lang_key]['id'])
-						: ORM::factory('zds_rs_tag_lang');
+							? ORM::factory('zds_rs_tag_lang',$tag_lang[$lang_key]['id'])
+							: ORM::factory('zds_rs_tag_lang');
 		
 						$tl->translation = $localized_tag_name;
 						$tl->locale = $lang_key;
@@ -118,14 +119,14 @@ class zdsreportstatus_Settings_Controller extends Admin_Controller
 				}
 				else
 				{
+
 					// Validation failed
 		
 					// Repopulate the form fields
 					$form = arr::overwrite($form, array_merge($tag_data->as_array(), $post->as_array()));
 		
 					// populate the error fields, if any
-					$errors = arr::overwrite($errors,
-							array_merge($category_data->errors('tag'), $post->errors('tag')));
+					$errors = arr::overwrite($errors, array_merge($tag_data->errors('tag'), $post->errors('tag')));
 					$form_error = TRUE;
 				}
 		

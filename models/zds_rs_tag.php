@@ -22,7 +22,7 @@ class Zds_rs_tag_Model extends ORM
 	 * @param	int	$tag_id Database id of the tag to be looked up
 	 * @return	bool
 	 */
-	public static function is_valid_category($tag_id)
+	public static function is_valid_tag($tag_id)
 	{
 		// Hiding errors/warnings here because child categories are seeing category_id as an obj and this fails poorly
 		return ( ! is_object($tag_id) AND intval($tag_id) > 0)
@@ -42,8 +42,8 @@ class Zds_rs_tag_Model extends ORM
 	{
 		// Set up validation
 		$array = Validation::factory($array)
-		->pre_filter('trim', TRUE)
-		->add_rules('tag_title','required', 'length[3,80]');
+			->pre_filter('trim', TRUE)
+			->add_rules('tag','required', 'length[1,80]');
 		
 		// Pass on validation to parent and return
 		return parent::validate($array, $save);

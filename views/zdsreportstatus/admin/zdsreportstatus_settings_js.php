@@ -37,3 +37,5 @@ function tagAction ( action, confirmAction, id )
 		$("#tagListing").submit();
 	}
 }
+
+});
