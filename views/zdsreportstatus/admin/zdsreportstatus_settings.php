@@ -9,12 +9,15 @@
 <div class="btns">
 <ul>
 <li>
-<a class="btn_save_add_new" href="<?php echo url::base(); ?>admin/zdsreportstatus_setting/workflow"><?php echo Kohana::lang('zdsreportstatus.workflow'); ?></a>
+<span><?php echo Kohana::lang('zdsreportstatus.tags'); ?></span>
+<a  href="<?php echo url::base(); ?>admin/zdsreportstatus_settings/workflow"><?php echo Kohana::lang('zdsreportstatus.workflow'); ?></a>
 </li>
 </ul>
 </div>
 
-
+<p>
+	<?php echo Kohana::lang('zdsreportstatus.tag_explanation'); ?>
+</p>
 				<!-- tabs -->
 				<div class="tabs">
 					<!-- tabset -->

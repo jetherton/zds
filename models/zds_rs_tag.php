@@ -48,4 +48,35 @@ class Zds_rs_tag_Model extends ORM
 		// Pass on validation to parent and return
 		return parent::validate($array, $save);
 	}
+	
+	
+	
+	/**
+	 * Gets the list of tags from the database as an array
+	 *
+	 * @param string $local Localization to use
+	 * @return array
+	 */
+	public static function categories($locale='en_US')
+	{
+		//get all the tags
+		$tags_db = ORM::factory('zds_rs_tag')->find_all();
+	
+		// To hold the return values
+		$tags = array();
+	
+		foreach($tags_db as $tag)
+		{
+			//figure out the language for the tag
+			$tag_title = $tag->tag;
+			$translation = ORM::factory('zds_rs_tag_lang')->where('locale',$locale)->where('tag_id',$tag->id)->find();
+			if($translation->loaded && strlen($translation->translation) > 0)
+			{
+				$tag_title = $translation->translation;
+			}
+			$tags[$tag->id] = $tag_title;
+		}
+	
+		return $tags;
+	}
 }

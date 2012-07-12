@@ -16,12 +16,15 @@ class zdsreportstatus_Settings_Controller extends Admin_Controller
 	 * @see Admin_Controller::index()
 	 */
 	public function index()
-	{
+	{		
 		$this->template->this_page = 'addons';
 		
 		// Standard Settings View
 		$this->template->content = new View("admin/plugins_settings");
 		$this->template->content->title = Kohana::lang('zdsreportstatus.zds_report_stat_settings') . ' - '. Kohana::lang('zdsreportstatus.tags');
+
+		//add some custom CSS
+		plugin::add_stylesheet('zdsreportstatus/css/zdsreportstatus');
 		
 		// Settings Form View
 		$this->template->content->settings_form = new View("zdsreportstatus/admin/zdsreportstatus_settings");
@@ -78,7 +81,7 @@ class zdsreportstatus_Settings_Controller extends Admin_Controller
 				}
 			}
 				
-			// Category instance for the operation
+			// tag instance for the operation
 			$tag = (! empty($_POST['tag_id']) AND Zds_rs_tag_Model::is_valid_tag($_POST['tag_id']))
 				? new Zds_rs_tag_Model($_POST['tag_id'])
 				: new Zds_rs_tag_Model();
@@ -172,4 +175,119 @@ class zdsreportstatus_Settings_Controller extends Admin_Controller
 		
 		
 	}
+	
+	
+	/**
+	 * (non-PHPdoc)
+	 * Used to add and delete workflow
+	 * @see Admin_Controller::index()
+	 */
+	public function workflow()
+	{
+
+		$this->template->this_page = 'addons';
+	
+		// Standard Settings View
+		$this->template->content = new View("admin/plugins_settings");
+		$this->template->content->title = Kohana::lang('zdsreportstatus.zds_report_stat_settings') . ' - '. Kohana::lang('zdsreportstatus.workflow');
+	
+		//add some custom CSS
+		plugin::add_stylesheet('zdsreportstatus/css/zdsreportstatus');
+	
+		// Settings Form View
+		$this->template->content->settings_form = new View("zdsreportstatus/admin/zdsreportstatus_settings_workflow");
+		
+		// Get locale
+		$locale = Kohana::config('locale.language.0');
+		
+		//get the tags
+		$this->template->content->settings_form->tags = Zds_rs_tag_Model::categories($locale);
+		
+		
+		
+		
+		// Setup and initialize form field names
+		$form = array(
+				'action' => '',
+				'workflow_id' => '',
+				'current_tag_id' => '',
+				'next_tag_id' => '',
+				'form_auth_token' => ''
+		);
+
+		// Copy the form as errors, so the errors will be stored with keys corresponding to the form field names		
+		$errors = $form;
+		$form_error = FALSE;
+		$form_saved = FALSE;
+		$form_action = "";
+		
+		//////////////////////////Handles the post
+		// Check, has the form been submitted, if so, setup validation
+		if ($_POST)
+		{
+		
+			// Fetch the post data
+			$post_data = $_POST;
+		
+			// Extract category-specific  information
+			$workflow_data = arr::extract($post_data, 'current_tag_id', 'next_tag_id');
+		
+			// Extract category image and category languages for independent validation
+			$admin_data = arr::extract($post_data, 'workflow_id', 'action');
+		
+			// Setup validation for the secondary data
+			$post = Validation::factory($admin_data)
+				->pre_filter('trim', TRUE);
+			
+			//we're going to add a workflow
+			if ($post->action == 'a')
+			{
+				
+				// Category instance for the operation
+				$workflow = ORM::factory('zds_rs_workflow');
+				
+				// Test to see if things passed the rule checks
+				if ($workflow->validate($workflow_data) AND  $post->validate(FALSE))
+				{
+					$workflow->save();
+				}
+				else
+				{
+					// Repopulate the form fields
+					$form = arr::overwrite($form, array_merge($tag_data->as_array(), $post->as_array()));
+					
+					// populate the error fields, if any
+					$errors = arr::overwrite($errors, array_merge($tag_data->errors('tag'), $post->errors('tag')));
+					$form_error = TRUE;
+				}
+			}
+			elseif($post->action == 'd') //deleting stuff
+			{
+				// Delete tag itself 
+					ORM::factory('zds_rs_workflow')
+						->delete($post->workflow_id);
+			}
+		
+		}//end if POST
+		
+		//get the current work flows
+		$workflows_db = ORM::factory('zds_rs_workflow')->find_all();
+		//now put the work flows into an easy to use set of arrays.
+		$workflows = array();
+		
+		foreach($workflows_db as $workflow)
+		{
+			$workflows[$workflow->current_tag_id][$workflow->id] = $workflow->next_tag_id;
+		}
+		$this->template->content->settings_form->workflows = $workflows;
+		
+		$this->template->content->settings_form->form = $form;
+		$this->template->content->settings_form->errors = $errors;
+		$this->template->content->settings_form->form_error = $form_error;
+		$this->template->content->settings_form->form_saved = $form_saved;
+		// Javascript Header
+		$this->template->js = new View('zdsreportstatus/admin/zdsreportstatus_settings_workflow_js');
+		
+	}//end workflow()
+	
 }

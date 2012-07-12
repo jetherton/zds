@@ -3,3 +3,29 @@
 div#zdsadminalert_cat_tree ul{
 	list-style-type: none;
 }
+
+.btns ul li span {
+padding: 0 9px;
+color: #5C5C5C;
+background: #aaa;
+float: left;
+line-height: 24px;
+text-decoration: none;
+border: 1px solid #D1D1D1;
+margin-right: 10px;
+margin-left: 10px;
+}
+
+.btns ul li a {
+margin-right: 10px;
+margin-left: 10px;
+}
+
+tr.sub-header{
+	background: #CFC;	
+	font-weight: bold;
+}
+
+tr.sub-header td{
+	padding-left:20px;
+}
