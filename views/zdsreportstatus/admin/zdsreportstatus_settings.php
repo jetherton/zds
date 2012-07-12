@@ -9,7 +9,7 @@
 <div class="btns">
 <ul>
 <li>
-<a class="btn_save_add_new" href="<?php echo url::base(); ?>/admin/zdsreportstatus_setting/workflow"><?php echo Kohana::lang('zdsreportstatus.workflow'); ?></a>
+<a class="btn_save_add_new" href="<?php echo url::base(); ?>admin/zdsreportstatus_setting/workflow"><?php echo Kohana::lang('zdsreportstatus.workflow'); ?></a>
 </li>
 </ul>
 </div>
@@ -102,6 +102,13 @@
 										$tag_id = $tag->id;
 										$tag_title = $tag->tag;
 										$tag_locals = array();
+										$tag_locals_db = ORM::factory('zds_rs_tag_lang')
+											->where('tag_id', $tag_id)
+											->find_all();
+										foreach($tag_locals_db as $local_db)
+										{
+											$tag_locals[$local_db->locale] = $local_db->translation;
+										}
 										//etherton this needs some extra SQL here
 										//foreach($category->category_lang as $category_lang){
 										//	$category_locals[$category_lang->locale] = $category_lang->category_title;
@@ -116,11 +123,11 @@
 											</td>											
 											<td class="col-4">
 												<ul>
-													<li class="none-separator"><a href="#add" onClick="fillFields('<?php echo(rawurlencode($tag_id)); ?>','<?php echo(rawurlencode($tag_title)); ?>','<?php
+													<li class="none-separator"><a href="#add" onClick="fillFields('<?php echo(rawurlencode($tag_id)); ?>','<?php echo(rawurlencode($tag_title)); ?>'<?php
 													foreach($locale_array as $lang_key => $lang_name){
 														echo ',';
-														if(isset($category_locals[$lang_key])){
-															echo ' \''.rawurlencode($category_locals[$lang_key]).'\'';
+														if(isset($tag_locals[$lang_key])){
+															echo ' \''.rawurlencode($tag_locals[$lang_key]).'\'';
 														}else{
 															echo ' \'\'';
 														}

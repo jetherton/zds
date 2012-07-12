@@ -53,6 +53,7 @@ class zdsreportstatus_Settings_Controller extends Admin_Controller
 		// Check, has the form been submitted, if so, setup validation
 		if ($_POST)
 		{
+		
 			// Fetch the post data
 			$post_data = $_POST;
 				
@@ -137,12 +138,12 @@ class zdsreportstatus_Settings_Controller extends Admin_Controller
 				if ($tag->loaded)
 				{
 					ORM::factory('zds_rs_tag_lang')
-					->where(array('tag_id' => $tag->id))
-					->delete_all();
+						->where(array('tag_id' => $tag->id))
+						->delete_all();
 						
 					// Delete tag itself 
-					ORM::factory('tag')
-					->delete($tag->id);
+					ORM::factory('zds_rs_tag')
+						->delete($tag->id);
 		
 					$form_saved = TRUE;
 					$form_action = strtoupper(Kohana::lang('ui_admin.deleted'));
