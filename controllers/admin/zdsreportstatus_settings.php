@@ -201,7 +201,14 @@ class zdsreportstatus_Settings_Controller extends Admin_Controller
 		$locale = Kohana::config('locale.language.0');
 		
 		//get the tags
-		$this->template->content->settings_form->tags = Zds_rs_tag_Model::categories($locale);
+		$this->template->content->settings_form->no_start_tags = Zds_rs_tag_Model::categories($locale);
+		//get the tags with start
+		$this->template->content->settings_form->tags = array();
+		$this->template->content->settings_form->tags[0] = "** ".Kohana::lang('zdsreportstatus.start')." **";
+		foreach($this->template->content->settings_form->no_start_tags as $id=>$t)
+		{
+			$this->template->content->settings_form->tags[$id] = $t; 
+		}
 		
 		
 		

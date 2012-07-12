@@ -60,7 +60,7 @@ class Zds_rs_tag_Model extends ORM
 	public static function categories($locale='en_US')
 	{
 		//get all the tags
-		$tags_db = ORM::factory('zds_rs_tag')->find_all();
+		$tags_db = ORM::factory('zds_rs_tag')->orderby('tag')->find_all();
 	
 		// To hold the return values
 		$tags = array();

@@ -36,10 +36,7 @@
 						</div>
 						<div class="tab_form_item">
 							<strong><?php echo Kohana::lang('zdsreportstatus.can_go_to');?>:</strong><br />
-							<?php //add all
-									$tags[0] = Kohana::lang('zdsreportstatus.all'); 
-							?>
-							<?php print form::dropdown('next_tag_id', $tags, null, array('id'=>'next_tag_id')); ?><br/>
+							<?php print form::dropdown('next_tag_id', $no_start_tags, null, array('id'=>'next_tag_id')); ?><br/>
 						</div>
 					</div>
 
