@@ -22,6 +22,13 @@
 		'report_status'=>'Report Status', 
 		'status'=>'Status',
 		'start'=>'Start',
+		'is_public'=>'Is public',
+		'submitted_by'=>'Submitted By',
+		'at'=>'At',
+		'yes'=>'Yes',
+		'no'=>'No',
+		'edit'=>'Edit',
+		
 	);
 	
 	

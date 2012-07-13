@@ -29,11 +29,19 @@ class zdsreportstatus_Controller extends Admin_Controller
 		$current_tags = array();
 		
 		//see if there's already a status
-		$current_status = ORM::factory('zds_rs_status')
+		$statuses = ORM::factory('zds_rs_status')
 			->where('incident_id', $id)
 			->orderby('time', 'DESC')
-			->find();
-		if(!$current_status->loaded)
+			->find_all();
+		//get the current status
+		$current_status = null;
+		foreach($statuses as $status)
+		{
+			$current_status = $status;
+			break;
+		}
+		
+		if($current_status == null)
 		{
 			$current_tags[] = 0;
 		}
@@ -78,6 +86,7 @@ class zdsreportstatus_Controller extends Admin_Controller
 		
 		$this->template->tag_list = $final_tag_list;
 		$this->template->currrent_tags = $current_tags;
+		$this->template->statuses = $statuses;
 		
 	}//end workflow()
 	
