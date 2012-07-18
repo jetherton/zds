@@ -83,7 +83,14 @@ class zdsreportstatus_Controller extends Admin_Controller
 			if(isset($tags[$allowed_tag])) //handle zero or start
 			$final_tag_list[$allowed_tag] = $tags[$allowed_tag];
 		}
-		$this->template->is_public = $current_status->is_public;
+		if($current_status != null)
+		{
+			$this->template->is_public = $current_status->is_public;
+		}
+		else
+		{
+			$this->template->is_public = false;
+		}
 		$this->template->tag_list = $final_tag_list;
 		$this->template->currrent_tags = $current_tags;
 		$this->template->statuses = $statuses;

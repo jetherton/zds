@@ -12,6 +12,11 @@
 	<?php 
 		foreach($statuses as $status)
 		{
+			//skip if on the front end and private
+			if(!$on_backend AND $status->is_public == 0)
+			{
+				continue;
+			}
 			$view = new View('zdsreportstatus/status_view');
 			$view->status = $status;
 			$view->on_backend = $on_backend;
