@@ -33,3 +33,10 @@ tr.sub-header td{
 .tabs{
 	width:801px;
 }
+
+.zds_rs_status_view {
+	border: solid 1px #ccc;
+	padding:5px;
+	margin:10px;
+}
+

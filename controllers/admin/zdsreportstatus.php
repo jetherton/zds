@@ -15,7 +15,7 @@ class zdsreportstatus_Controller extends Admin_Controller
 	 * Used to get the edit form
 	 * @see Admin_Controller::index()
 	 */
-	public function getform($id)
+	public function getform($id = 0)
 	{
 		$this->template = new View('zdsreportstatus/admin/editform');
 		
@@ -83,11 +83,40 @@ class zdsreportstatus_Controller extends Admin_Controller
 			if(isset($tags[$allowed_tag])) //handle zero or start
 			$final_tag_list[$allowed_tag] = $tags[$allowed_tag];
 		}
-		
+		$this->template->is_public = $current_status->is_public;
 		$this->template->tag_list = $final_tag_list;
 		$this->template->currrent_tags = $current_tags;
 		$this->template->statuses = $statuses;
 		
 	}//end workflow()
+	
+	
+	/** 
+	 * Used to perform inline edits
+	 */
+	public function inlineedit()
+	{
+		//turn off the template
+		$this->template = "";
+		//turn off auto render
+		$this->auto_render = false;
+		//make sure we have a valid ID
+		if(!isset($_POST['id']))
+		{
+			return;
+		}
+		$id = intval($_POST['id']);
+		if($id == 0)
+		{
+			return;
+		}
+		//grab the status text
+		$status_text = $_POST['statusText'];
+		
+		$status = ORM::factory('zds_rs_status')->find($id);
+		$status->comment = $status_text;
+		$status->save();
+		
+	}
 	
 }

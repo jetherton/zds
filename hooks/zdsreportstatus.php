@@ -28,7 +28,9 @@ class zdsreportstatus {
 	
 		if(Router::$controller == "reports")
 		{
-
+			//add the style sheet
+			plugin::add_stylesheet("zdsreportstatus/css/zdsreportstatus");
+			
 			//handle approving reports from the edit controller
 			if(Router::$method == 'edit')
 			{
@@ -38,6 +40,10 @@ class zdsreportstatus {
 				Event::add('ushahidi_action.report_submit_admin', array($this, '_grab_post'));
 				//to know the ID of the report
 				Event::add('ushahidi_action.report_edit', array($this, '_save_status'));
+			}
+			if(Router::$method == 'view')
+			{
+				Event::add('ushahidi_action.report_extra', array($this, '_inject_status'));
 			}		
 		}		
 
@@ -104,6 +110,24 @@ class zdsreportstatus {
 				});
 			});		
 		</script>";
+	}
+	
+	public function _inject_status()
+	{
+		$id = event::$data;
+		
+		//get the status
+		//see if there's already a status
+		$statuses = ORM::factory('zds_rs_status')
+		->where('incident_id', $id)
+		->orderby('time', 'DESC')
+		->find_all();
+		
+		//render the views
+		$status_views = new View('zdsreportstatus/status_views');
+		$status_views->statuses = $statuses;
+		$status_views->on_backend = false;
+		echo $status_views;
 	}
 
 	/**

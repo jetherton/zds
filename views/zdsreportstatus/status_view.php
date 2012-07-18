@@ -9,7 +9,9 @@
 
 <div class="zds_rs_status_view" id="zds_rs_<?php echo $status->id?>">
 	<?php if(isset($on_backend) AND $on_backend) {?>
-		<p><a href="<?php echo url::base() . 'admin/zdsreportstatus/edit/'. $status->id;?>"><?php echo Kohana::lang('zdsreportstatus.edit'); ?></a></p>
+		<p>
+			<button id="zds_rs_edit_button_<?php echo $status->id?>" type="button" onclick="editZdsRs(<?php echo $status->id;?>); return false;"><?php echo Kohana::lang('zdsreportstatus.edit'); ?></button> 
+		</p>
 	<?php }?>
 	<p>
 		<strong><?php echo Kohana::lang('zdsreportstatus.submitted_by');?>:</strong> <?php echo ORM::factory('user')->find($status->user_id)->name;?>
@@ -23,18 +25,18 @@
 	</p>
 	<?php }?>	
 	<p>
-		<strong><?php echo Kohana::lang('zdsreportstatus.status');?>:</strong> <?php echo $status->comment; ?>
+		<strong><?php echo Kohana::lang('zdsreportstatus.status');?>:</strong> <span id="zds_rs_status_<?php echo $status->id; ?>"><?php echo $status->comment; ?></span>
 	</p>
 	<p>
 	<strong><?php echo Kohana::lang('zdsreportstatus.tags'); ?>:</strong>
-	<br/>
+	<div id="zds_rs_tags_<?php echo $status->id;?>">
 		<?php
 		//get the tags
 		$tags = ORM::factory('zds_rs_tag')
 			->join('zds_rs_tag_status', 'zds_rs_tag_status.tag_id', 'zds_rs_tag.id')
 			->where('zds_rs_tag_status.status_id', $status->id)
 			->find_all(); 
-	$i = 0;
+	$i = 1;
 	foreach($tags as $tag) 
 	{
 		$i++;
@@ -44,5 +46,6 @@
 		}
 		echo '<class="zds_rs_tag" span>'. $tag->tag . '</span>';
 	}?>	
+	</div>
 	</p>
 </div>
