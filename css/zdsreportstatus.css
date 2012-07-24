@@ -40,3 +40,15 @@ tr.sub-header td{
 	margin:10px;
 }
 
+.zds_rs_tag {
+	background-color: #ccc;
+	-webkit-border-radius: 5px;
+     -moz-border-radius: 5px;
+          border-radius: 5px;
+     margin:10px;
+     padding:2px;
+}
+
+.zds_rs_tag_holder{
+	margin-top:7px;
+}

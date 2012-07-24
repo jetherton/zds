@@ -32,6 +32,8 @@
 		'edit'=>'Edit',
 		'save'=>'Save',
 		'cancel'=>'Cancel',
+		'delete'=>'Delete',
+		'are_you_sure_delete'=>'Are you sure you want to delete this status?',
 		
 	);
 	

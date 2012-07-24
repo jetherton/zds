@@ -126,4 +126,30 @@ class zdsreportstatus_Controller extends Admin_Controller
 		
 	}
 	
+	/**
+	 * Used to delete a status update
+	 */
+	public function inlinedelete()
+	{
+		//turn off the template
+		$this->template = "";
+		//turn off auto render
+		$this->auto_render = false;
+		//make sure we have a valid ID
+		if(!isset($_POST['id']))
+		{
+			echo "error";
+			return;
+		}
+		$id = intval($_POST['id']);
+		if($id == 0)
+		{
+			echo "error";
+			return;
+		}
+	
+		$status = ORM::factory('zds_rs_status')->find($id);
+		$status->delete();
+		echo "success";
+	}
 }

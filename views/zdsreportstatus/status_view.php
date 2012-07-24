@@ -10,7 +10,8 @@
 <div class="zds_rs_status_view" id="zds_rs_<?php echo $status->id?>">
 	<?php if(isset($on_backend) AND $on_backend) {?>
 		<p>
-			<button id="zds_rs_edit_button_<?php echo $status->id?>" type="button" onclick="editZdsRs(<?php echo $status->id;?>); return false;"><?php echo Kohana::lang('zdsreportstatus.edit'); ?></button> 
+			<button id="zds_rs_edit_button_<?php echo $status->id?>" type="button" onclick="editZdsRs(<?php echo $status->id;?>); return false;"><?php echo Kohana::lang('zdsreportstatus.edit'); ?></button>
+			<button id="zds_rs_delete_button_<?php echo $status->id?>" type="button" onclick="deleteZdsRs(<?php echo $status->id;?>); return false;"><?php echo Kohana::lang('zdsreportstatus.delete'); ?></button> 
 		</p>
 	<?php }?>
 	<p>
@@ -29,7 +30,7 @@
 	</p>
 	<p>
 	<strong><?php echo Kohana::lang('zdsreportstatus.tags'); ?>:</strong>
-	<div id="zds_rs_tags_<?php echo $status->id;?>">
+	<div class="zds_rs_tag_holder" id="zds_rs_tags_<?php echo $status->id;?>">
 		<?php
 		//get the tags
 		$tags = ORM::factory('zds_rs_tag')
@@ -42,10 +43,9 @@
 		$i++;
 		if($i % 2)
 		{
-			echo "<br/>";
+			//echo "<br/>";
 		}
-		echo '<class="zds_rs_tag" span>'. $tag->tag . '</span>';
+		echo '<span class="zds_rs_tag">'. $tag->tag . '</span>';
 	}?>	
 	</div>
-	</p>
 </div>

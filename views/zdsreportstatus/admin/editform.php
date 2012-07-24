@@ -12,6 +12,23 @@
 
 
 
+function deleteZdsRs(id)
+{
+	var youSure = confirm("<?php echo Kohana::lang('zdsreportstatus.are_you_sure_delete'); ?>");
+
+	if(youSure == true)
+	{
+		$.post('<?php echo url::base();?>admin/zdsreportstatus/inlinedelete', {id:id}, function(data){
+			if(data == 'success')
+			{
+				$("#zds_rs_"+id).remove();
+			}
+		});
+	}
+}
+
+
+
 function editZdsRs(id)
 {
 	//get the current text
