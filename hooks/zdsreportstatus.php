@@ -66,8 +66,26 @@ class zdsreportstatus {
 	/**
 	 * Grab the posted data
 	 */
-	public function _grab_post()
+	public function _grab_post()	
 	{
+		
+		//make sure this user has permission to do this
+		$user = new User_Model($_SESSION['auth_user']->id);
+		$has_permission = false;
+		foreach($user->roles as $role)
+		{
+			if($role->name == 'PROBLEMSOLVER')
+			{
+				$has_permission = true;
+				break;
+			}
+		}
+		
+		if(!$has_permission)
+		{
+			return;
+		}
+		
 		$this->post = event::$data;
 	}
 	
@@ -77,6 +95,25 @@ class zdsreportstatus {
 	 */
 	public function _save_status()
 	{
+		
+		
+		//make sure this user has permission to do this
+		$user = new User_Model($_SESSION['auth_user']->id);
+		$has_permission = false;
+		foreach($user->roles as $role)
+		{
+			if($role->name == 'PROBLEMSOLVER')
+			{
+				$has_permission = true;
+				break;
+			}
+		}
+		
+		if(!$has_permission)
+		{
+			return;
+		}
+		
 		//grab the incident ID
 		$incident_id = event::$data;
 		
@@ -116,18 +153,43 @@ class zdsreportstatus {
 	 */
 	public function _inject_status_form()
 	{
+
+		$url = 'getform';
+		
+		//make sure this user has permission to do this
+		$user = new User_Model($_SESSION['auth_user']->id);
+		$has_permission = false;
+		foreach($user->roles as $role)
+		{
+			if($role->name == 'PROBLEMSOLVER')
+			{
+				$has_permission = true;
+				break;
+			}
+		}
+		
 		$id = event::$data;
 		
+		if(!$has_permission)
+		{
+			$url = 'getformnoedit';	
+		}
+		
+		
+		
 		echo "<script type=\"text/javascript\">$(document).ready(function(){
-			$.get('".url::base()."admin/zdsreportstatus/getform/".$id."', function(data){
+			$.get('".url::base()."admin/zdsreportstatus/".$url."/".$id."', function(data){
 				$(\"#custom_forms\").before(data);
 				});
 			});		
 		</script>";
 	}
 	
+	
+	
 	public function _inject_status()
 	{
+	
 		$id = event::$data;
 		
 		//get the status

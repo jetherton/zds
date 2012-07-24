@@ -80,6 +80,33 @@ class Zdsreportstatus_Install {
 				PRIMARY KEY (`id`)
 			);
 		");
+		
+		// adds the problem solver role
+		$this->db->query("INSERT INTO  `".Kohana::config('database.default.table_prefix')."roles` (
+				`id` ,
+				`name` ,
+				`description` ,
+				`reports_view` ,
+				`reports_edit` ,
+				`reports_evaluation` ,
+				`reports_comments` ,
+				`reports_download` ,
+				`reports_upload` ,
+				`messages` ,
+				`messages_reporters` ,
+				`stats` ,
+				`settings` ,
+				`manage` ,
+				`users` ,
+				`manage_roles` ,
+				`checkin` ,
+				`checkin_admin` ,
+				`access_level`
+		)
+		VALUES (
+				NULL ,  'PROBLEMSOLVER',  'Used to update ZDS Report Status',  '1',  '1',  '0',  '0',  '0',  '0',  '0',  '0',  '0',  '0',  '0',  '0',  '0',  '1',  '0',  '0'
+		);");
+		
 
 	}
 

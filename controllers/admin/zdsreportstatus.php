@@ -17,6 +17,26 @@ class zdsreportstatus_Controller extends Admin_Controller
 	 */
 	public function getform($id = 0)
 	{
+		
+		
+		//make sure this user has permission to do this
+		$user = new User_Model($_SESSION['auth_user']->id);
+		$has_permission = false;
+		foreach($user->roles as $role)
+		{
+			if($role->name == 'PROBLEMSOLVER')
+			{
+				$has_permission = true;
+				break;
+			}
+		}
+		
+		if(!$has_permission)
+		{
+			return;
+		}
+		
+		
 		$this->template = new View('zdsreportstatus/admin/editform');
 		
 		// Get locale
@@ -98,11 +118,61 @@ class zdsreportstatus_Controller extends Admin_Controller
 	}//end workflow()
 	
 	
+	
+	
+	/**
+	 * (non-PHPdoc)
+	 * Used to get the status info for people who can't edit it
+	 * @see Admin_Controller::index()
+	 */
+	public function getformnoedit($id = 0)
+	{
+	
+		//turn off the template
+		$this->template = "";
+		//turn off auto render
+		$this->auto_render = false;
+		
+		//get the status
+		//see if there's already a status
+		$statuses = ORM::factory('zds_rs_status')
+		->where('incident_id', $id)
+		->orderby('time', 'DESC')
+		->find_all();
+		
+		//render the views
+		$status_views = new View('zdsreportstatus/status_views');
+		$status_views->statuses = $statuses;
+		$status_views->on_backend = false;
+		echo $status_views;
+	
+	}//end workflow()
+	
+	
 	/** 
 	 * Used to perform inline edits
 	 */
 	public function inlineedit()
 	{
+		
+		
+		//make sure this user has permission to do this
+		$user = new User_Model($_SESSION['auth_user']->id);
+		$has_permission = false;
+		foreach($user->roles as $role)
+		{
+			if($role->name == 'PROBLEMSOLVER')
+			{
+				$has_permission = true;
+				break;
+			}
+		}
+		
+		if(!$has_permission)
+		{
+			return;
+		}
+		
 		//turn off the template
 		$this->template = "";
 		//turn off auto render
@@ -131,6 +201,25 @@ class zdsreportstatus_Controller extends Admin_Controller
 	 */
 	public function inlinedelete()
 	{
+		
+		
+		//make sure this user has permission to do this
+		$user = new User_Model($_SESSION['auth_user']->id);
+		$has_permission = false;
+		foreach($user->roles as $role)
+		{
+			if($role->name == 'PROBLEMSOLVER')
+			{
+				$has_permission = true;
+				break;
+			}
+		}
+		
+		if(!$has_permission)
+		{
+			return;
+		}
+		
 		//turn off the template
 		$this->template = "";
 		//turn off auto render
