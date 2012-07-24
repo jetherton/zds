@@ -40,6 +40,10 @@ tr.sub-header td{
 	margin:10px;
 }
 
+.zds_rs_status_view p{
+	margin:5px;
+}
+
 .zds_rs_tag {
 	background-color: #ccc;
 	-webkit-border-radius: 5px;
