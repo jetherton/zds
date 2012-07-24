@@ -41,10 +41,24 @@ class zdsreportstatus {
 				//to know the ID of the report
 				Event::add('ushahidi_action.report_edit', array($this, '_save_status'));
 			}
-			if(Router::$method == 'view')
+			elseif(Router::$method == 'view')
 			{
 				Event::add('ushahidi_action.report_extra', array($this, '_inject_status'));
-			}		
+			}
+
+			elseif(Router::$method == 'index')
+			{
+				Event::add('ushahidi_action.report_filters_ui', array($this,'_add_report_filter_ui'));
+				Event::add('ushahidi_action.header_scripts', array($this, '_add_report_filter_js'));				
+			}
+			elseif(Router::$method == 'fetch_reports')
+			{
+				Event::add('ushahidi_filter.fetch_incidents_set_params', array($this,'_add_filter_logic'));
+			}
+		}
+		elseif(Router::$controller== 'json')
+		{
+			Event::add('ushahidi_filter.fetch_incidents_set_params', array($this,'_add_filter_logic'));
 		}		
 
 	}//end add
@@ -138,6 +152,67 @@ class zdsreportstatus {
 	{
 		return strpos(url::current(), 'admin/') === 0;
 	}
+	
+	/**
+	 * This little guy will add the UI to the /reports page so we can filter by tag
+	 */
+	public function _add_report_filter_ui()
+	{
+			
+			// Get locale
+		$locale = Kohana::config('locale.language.0');
+		
+		//get the tags
+		$tags = Zds_rs_tag_Model::categories($locale);
+		
+		$view = new View('zdsreportstatus/report_filter_ui');
+		$view->tags = $tags;
+		$view->render(true);
+	}
+	
+	/**
+	 * This little guy will add the JS to the /reports page so we can filter by tag
+	 */
+	public function _add_report_filter_js()
+	{
+		$view = new View('zdsreportstatus/report_filter_js');
+		$view->render(true);
+	}
+	
+	public function _add_filter_logic()
+	{
+		//get the table prefix
+		$table_prefix = Kohana::config('database.default.table_prefix');
+		
+		//check if the zds_rs is in the data
+		if(!isset($_GET['zds_rs']))
+		{
+			return;
+		}
+		
+
+		
+		$params = Event::$data;
+		
+		$sql = 'i.id IN (SELECT DISTINCT incident_id FROM '.$table_prefix.'zds_rs_status AS status '.
+				'INNER JOIN '.$table_prefix.'zds_rs_tag_status AS tag ON (status.id = tag.status_id) '.
+				'WHERE ';
+		
+		$i = 0;
+		foreach($_GET['zds_rs'] as $tag_id)
+		{
+			$i++;
+			if($i > 1){$sql .= ' OR ';}
+			$sql .= 'tag.tag_id = '.$tag_id;
+		}
+		
+		$sql .= ' )';
+		
+		array_push($params, $sql);
+		
+		Event::$data = $params;
+		
+	}//end _add_filter_logic
 }
 
 new zdsreportstatus;
