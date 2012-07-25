@@ -81,31 +81,46 @@ class Zdsreportstatus_Install {
 			);
 		");
 		
-		// adds the problem solver role
-		$this->db->query("INSERT INTO  `".Kohana::config('database.default.table_prefix')."roles` (
-				`id` ,
-				`name` ,
-				`description` ,
-				`reports_view` ,
-				`reports_edit` ,
-				`reports_evaluation` ,
-				`reports_comments` ,
-				`reports_download` ,
-				`reports_upload` ,
-				`messages` ,
-				`messages_reporters` ,
-				`stats` ,
-				`settings` ,
-				`manage` ,
-				`users` ,
-				`manage_roles` ,
-				`checkin` ,
-				`checkin_admin` ,
-				`access_level`
-		)
-		VALUES (
-				NULL ,  'PROBLEMSOLVER',  'Used to update ZDS Report Status',  '1',  '1',  '0',  '0',  '0',  '0',  '0',  '0',  '0',  '0',  '0',  '0',  '0',  '1',  '0',  '0'
-		);");
+		//make sure the problem solver role doesn't already exists
+		if(!ORM::factory('role')->where('name','PROBLEMSOLVER')->find()->loaded)
+		{
+			// adds the problem solver role
+			$this->db->query("INSERT INTO  `".Kohana::config('database.default.table_prefix')."roles` (
+					`id` ,
+					`name` ,
+					`description` ,
+					`reports_view` ,
+					`reports_edit` ,
+					`reports_evaluation` ,
+					`reports_comments` ,
+					`reports_download` ,
+					`reports_upload` ,
+					`messages` ,
+					`messages_reporters` ,
+					`stats` ,
+					`settings` ,
+					`manage` ,
+					`users` ,
+					`manage_roles` ,
+					`checkin` ,
+					`checkin_admin` ,
+					`access_level`
+			)
+			VALUES (
+					NULL ,  'PROBLEMSOLVER',  'Used to update ZDS Report Status',  '1',  '1',  '0',  '0',  '0',  '0',  '0',  '0',  '0',  '0',  '0',  '0',  '0',  '1',  '0',  '0'
+			);");
+		}
+		
+		
+		// Tags work flow mapping
+		$this->db->query("
+			CREATE TABLE IF NOT EXISTS `".Kohana::config('database.default.table_prefix')."zds_rs_user`
+			(
+			id int(15) unsigned NOT NULL AUTO_INCREMENT,
+			user_id int(15) unsigned NOT NULL,
+			PRIMARY KEY (`id`)
+			);
+				");
 		
 
 	}

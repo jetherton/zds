@@ -35,6 +35,7 @@
 		'delete'=>'Delete',
 		'are_you_sure_delete'=>'Are you sure you want to delete this status?',
 		'status_tags'=>'Status Tags',
+		'user_can'=>'User can edit the status of a report',
 		
 	);
 	

@@ -19,19 +19,7 @@ class zdsreportstatus_Controller extends Admin_Controller
 	{
 		
 		
-		//make sure this user has permission to do this
-		$user = new User_Model($_SESSION['auth_user']->id);
-		$has_permission = false;
-		foreach($user->roles as $role)
-		{
-			if($role->name == 'PROBLEMSOLVER')
-			{
-				$has_permission = true;
-				break;
-			}
-		}
-		
-		if(!$has_permission)
+		if(!zdsreportstatus_helper::has_permission())
 		{
 			return;
 		}
@@ -156,19 +144,7 @@ class zdsreportstatus_Controller extends Admin_Controller
 	{
 		
 		
-		//make sure this user has permission to do this
-		$user = new User_Model($_SESSION['auth_user']->id);
-		$has_permission = false;
-		foreach($user->roles as $role)
-		{
-			if($role->name == 'PROBLEMSOLVER')
-			{
-				$has_permission = true;
-				break;
-			}
-		}
-		
-		if(!$has_permission)
+		if(!zdsreportstatus_helper::has_permission())
 		{
 			return;
 		}
@@ -203,20 +179,8 @@ class zdsreportstatus_Controller extends Admin_Controller
 	public function inlinedelete()
 	{
 		
-		
-		//make sure this user has permission to do this
-		$user = new User_Model($_SESSION['auth_user']->id);
-		$has_permission = false;
-		foreach($user->roles as $role)
-		{
-			if($role->name == 'PROBLEMSOLVER')
-			{
-				$has_permission = true;
-				break;
-			}
-		}
-		
-		if(!$has_permission)
+				
+		if(!zdsreportstatus_helper::has_permission())
 		{
 			return;
 		}

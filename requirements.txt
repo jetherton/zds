@@ -34,6 +34,8 @@ id, tag_id, locale, translation
 zds_rs_workflow
 id, current_tag_id, next_tag_id
     
+zds_rs_user
+id, user_id
 
     
     

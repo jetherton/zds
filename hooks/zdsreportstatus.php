@@ -60,8 +60,30 @@ class zdsreportstatus {
 		{
 			Event::add('ushahidi_filter.fetch_incidents_set_params', array($this,'_add_filter_logic'));
 		}		
+		if(Router::$controller == "users")
+		{
+		
+			//hook into the UI for user admin/edit
+			Event::add('ushahidi_action.users_form_admin', array($this, '_add_user_view'));	 //add the UI for setting up alerts
+		
+			//hook into the controller so we can see the contents of the post
+			Event::add('ushahidi_action.users_add_admin', array($this, '_collect_post'));
+			//hook into the controller so we can get the details of the user that was edited for the above post
+			Event::add('ushahidi_action.user_edit', array($this, '_user_edited'));
+		
+		}
 
 	}//end add
+	
+	/**
+	 * This collects the contents of the HTTP post that has the details of the users
+	 * preferences that we want
+	 */
+	public function _collect_post()
+	{
+		$this->post = event::$data;
+	}
+	
 	
 	/**
 	 * Grab the posted data
@@ -69,19 +91,8 @@ class zdsreportstatus {
 	public function _grab_post()	
 	{
 		
-		//make sure this user has permission to do this
-		$user = new User_Model($_SESSION['auth_user']->id);
-		$has_permission = false;
-		foreach($user->roles as $role)
-		{
-			if($role->name == 'PROBLEMSOLVER')
-			{
-				$has_permission = true;
-				break;
-			}
-		}
-		
-		if(!$has_permission)
+			
+		if(!zdsreportstatus_helper::has_permission())
 		{
 			return;
 		}
@@ -98,18 +109,7 @@ class zdsreportstatus {
 		
 		
 		//make sure this user has permission to do this
-		$user = new User_Model($_SESSION['auth_user']->id);
-		$has_permission = false;
-		foreach($user->roles as $role)
-		{
-			if($role->name == 'PROBLEMSOLVER')
-			{
-				$has_permission = true;
-				break;
-			}
-		}
-		
-		if(!$has_permission)
+		if(!zdsreportstatus_helper::has_permission())
 		{
 			return;
 		}
@@ -156,17 +156,8 @@ class zdsreportstatus {
 
 		$url = 'getform';
 		
-		//make sure this user has permission to do this
-		$user = new User_Model($_SESSION['auth_user']->id);
-		$has_permission = false;
-		foreach($user->roles as $role)
-		{
-			if($role->name == 'PROBLEMSOLVER')
-			{
-				$has_permission = true;
-				break;
-			}
-		}
+		$has_permission = zdsreportstatus_helper::has_permission();
+		
 		
 		$id = event::$data;
 		
@@ -275,6 +266,88 @@ class zdsreportstatus {
 		Event::$data = $params;
 		
 	}//end _add_filter_logic
+	
+	
+	
+	/**
+	 * Adds the UI for zds report status to the user edit page
+	 */
+	public function _add_user_view()
+	{
+	
+		$form = array('edit_status'=> false);
+	
+		//is this for a new user, or a previous user?
+		if(Router::$controller == "profile") //the profile doesn't do us the courtesy of telling us the user's id, so we have to figure it out ourselves
+		{
+			if(isset($_SESSION['auth_user']))
+			{
+				$id = $_SESSION['auth_user']->id;
+			}
+			else
+			{
+				return;
+			}
+		}
+		else
+		{
+			$id = Event::$data;
+		}
+		if($id)
+		{ //figure out who this user is and what they're settings are
+			$zds_rs_user = ORM::factory('zds_rs_user')
+			->where('user_id', $id)
+			->find();
+	
+			//if the user has no admin alert settings
+			if($zds_rs_user->loaded)
+			{
+				$form['edit_status'] = true;
+			}
+		}
+	
+	
+		$view = new View('zdsreportstatus/admin/user');		
+		$view->form = $form;
+		echo $view;
+	}//end add_user_view
+	
+	
+	/**
+	 * This grabs the details of the user that was just edited, primarily the user ID, that's what we
+	 * really want. This also does all the work of saving things to the DB
+	 */
+	public function _user_edited()
+	{
+		$user = event::$data;
+		$post = $this->post;
+	
+		$can_edit = isset($post['zds_rs_user_edit']) AND $post['zds_rs_user_edit'] == 'can_edit';
+		
+		
+		
+		//if they can edit, then set that in the DB
+		if($can_edit)
+		{
+			
+			
+			//but first see if this already exists, don't create duplicates, that's bad
+			$zds_rs_edit = ORM::factory('zds_rs_user')->where('user_id', $user->id)->find();
+			if(!$zds_rs_edit->loaded)
+			{
+				
+				$zds_rs_edit = ORM::factory('zds_rs_user');
+				$zds_rs_edit->user_id = $user->id;
+				$zds_rs_edit->save();
+			}
+		}
+		else
+		{
+			//they can't edit any more, so take away their permission
+			$zds_rs_edit = ORM::factory('zds_rs_user')->where('user_id', $user->id)->delete_all();
+		}
+		
+	}//end _user_edited
 }
 
 new zdsreportstatus;
