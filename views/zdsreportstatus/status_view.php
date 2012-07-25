@@ -22,7 +22,8 @@
 	</p>
 	<?php if(isset($on_backend) AND $on_backend) {?>
 	<p>
-		<strong><?php echo Kohana::lang('zdsreportstatus.is_public');?>:</strong> <?php echo $status->is_public == 1 ? Kohana::lang('zdsreportstatus.yes') : Kohana::lang('zdsreportstatus.no'); ?>
+		<strong data-is_public="<?php echo $status->is_public; ?>" id="zds_rs_public_<?php echo $status->id; ?>"><?php echo Kohana::lang('zdsreportstatus.is_public');?>:</strong> 
+		<span id="zds_rs_public_text_<?php echo $status->id; ?>"><?php echo $status->is_public == 1 ? Kohana::lang('zdsreportstatus.yes') : Kohana::lang('zdsreportstatus.no'); ?></span>
 	</p>
 	<?php }?>	
 	<p>

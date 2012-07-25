@@ -192,6 +192,7 @@ class zdsreportstatus_Controller extends Admin_Controller
 		
 		$status = ORM::factory('zds_rs_status')->find($id);
 		$status->comment = $status_text;
+		$status->is_public = $_POST['is_public'];
 		$status->save();
 		
 	}

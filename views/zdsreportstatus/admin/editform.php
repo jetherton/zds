@@ -33,6 +33,21 @@ function editZdsRs(id)
 {
 	//get the current text
 	var currentStatusText = $("#zds_rs_status_"+id).text();
+	//get the current public/private text
+	var isPublic = false;
+	if($("#zds_rs_public_"+id).attr('data-is_public') == '1')
+	{
+		isPublic = true;
+	}
+	console.log(isPublic);
+	var checkedText = '';
+	if(isPublic)
+	{
+		checkedText = 'checked';
+	}
+	//add in the is public checkbox
+	$("#zds_rs_public_text_"+id).after('<input type="checkbox" name="zds_rs_is_public_'+id+'" id="zds_rs_is_public_'+id+'" value="is_public" '+checkedText+'/>');
+	$("#zds_rs_public_text_"+id).hide();
 	//swap out the text for the span
 	$("#zds_rs_status_"+id).after('<textarea style="width:320px;height:100px;" class="zds_rs_inline_textarea" cols="10" rows="6" id="zds_rs_status_area_'+id+'">'+ currentStatusText + '</textarea>');
 	//now drop the span
@@ -47,15 +62,27 @@ function editZdsRs(id)
 function saveZdsRs(id)
 {
 	var statusText = $("#zds_rs_status_area_"+id).val();
-	$.post('<?php echo url::base();?>admin/zdsreportstatus/inlineedit', {id:id, statusText:statusText}, function(data){
+	var isPublic = $("#zds_rs_is_public_"+id).attr("checked") ? '1' : '0';
+	$.post('<?php echo url::base();?>admin/zdsreportstatus/inlineedit', {id:id, statusText:statusText, is_public:isPublic}, function(data){
 			
 			$("#zds_rs_status_area_"+id).remove();
 			$("#zds_rs_cancel_button_"+id).remove();
 			$("#zds_rs_save_button_"+id).remove();
+			$("#zds_rs_is_public_"+id).remove();
 			
 			$("#zds_rs_edit_button_"+id).show();
 			$("#zds_rs_status_"+id).show();
 			$("#zds_rs_status_"+id).text(statusText);
+			$("#zds_rs_public_text_"+id).show();
+			if(isPublic == '1')
+			{
+				$("#zds_rs_public_text_"+id).text('<?php echo Kohana::lang('zdsreportstatus.yes');?>');
+			}
+			else
+			{
+				$("#zds_rs_public_text_"+id).text('<?php echo Kohana::lang('zdsreportstatus.no');?>');
+			}
+			
 			
 		});
 }
@@ -66,9 +93,11 @@ function cancelZdsRs(id)
 	$("#zds_rs_status_area_"+id).remove();
 	$("#zds_rs_cancel_button_"+id).remove();
 	$("#zds_rs_save_button_"+id).remove();
+	$("#zds_rs_is_public_"+id).remove();
 	
 	$("#zds_rs_edit_button_"+id).show();
 	$("#zds_rs_status_"+id).show();
+	$("#zds_rs_public_text_"+id).show();
 }
 </script>
 
