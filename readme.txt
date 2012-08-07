@@ -2,9 +2,9 @@
 name: ZDS Report Status
 website: http://www.zdatasolutions.net/
 description: Allows for status updates to be given for a report
-version: 1.0
-requires: 2.4
-tested up to: 2.4
+version: 1.1
+requires: 2.5
+tested up to: 2.5
 author: Z Data Solutions
 author website: http://www.zdatasolutions.net/
 
