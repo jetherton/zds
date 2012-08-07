@@ -139,12 +139,15 @@ class zdsreportstatus {
 		
 		//next handle the tags
 		//loop over the newly assigned categories
-		foreach($post['zds_status_tag'] as $tag_id)
+		if(isset($post['zds_status_tag']))
 		{
-			$tag_to_status = ORM::factory('zds_rs_tag_status');
-			$tag_to_status->tag_id = $tag_id;
-			$tag_to_status->status_id = $status->id;
-			$tag_to_status->save();
+			foreach($post['zds_status_tag'] as $tag_id)
+			{
+				$tag_to_status = ORM::factory('zds_rs_tag_status');
+				$tag_to_status->tag_id = $tag_id;
+				$tag_to_status->status_id = $status->id;
+				$tag_to_status->save();
+			}
 		}
 	}
 
