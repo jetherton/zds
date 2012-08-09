@@ -20,7 +20,7 @@ class zdsreportstatus_Settings_Controller extends Admin_Controller
 		$this->template->this_page = 'addons';
 		
 		// Standard Settings View
-		$this->template->content = new View("admin/plugins_settings");
+		$this->template->content = new View("admin/addons/plugin_settings");
 		$this->template->content->title = Kohana::lang('zdsreportstatus.zds_report_stat_settings') . ' - '. Kohana::lang('zdsreportstatus.tags');
 
 		//add some custom CSS
@@ -188,7 +188,7 @@ class zdsreportstatus_Settings_Controller extends Admin_Controller
 		$this->template->this_page = 'addons';
 	
 		// Standard Settings View
-		$this->template->content = new View("admin/plugins_settings");
+		$this->template->content = new View("admin/addons/plugin_settings");
 		$this->template->content->title = Kohana::lang('zdsreportstatus.zds_report_stat_settings') . ' - '. Kohana::lang('zdsreportstatus.workflow');
 	
 		//add some custom CSS
