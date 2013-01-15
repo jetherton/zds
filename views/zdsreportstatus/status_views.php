@@ -10,6 +10,10 @@
 <h4><?php echo Kohana::lang('zdsreportstatus.report_statuses');?></h4>
 <div id="old_zds_statuses" class="row">
 	<?php 
+		if(count($statuses) == 0)
+		{
+			echo Kohana::lang('zdsreportstatus.no_status_for_report');
+		}
 		foreach($statuses as $status)
 		{
 			//skip if on the front end and private
